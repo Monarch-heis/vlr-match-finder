@@ -21,7 +21,7 @@ with st.sidebar:
 # --------------------------
 # Preprocessing
 # --------------------------
-features = df_clean.drop(columns=['Player'])
+features = df.drop(columns=['Player'])
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(features)
 
