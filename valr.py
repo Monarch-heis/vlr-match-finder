@@ -7,7 +7,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Load Cleaned Dataset
 # --------------------------
 df = pd.read_csv("cleaned_valorant_stats.csv")
+df = pd.read_csv("cleaned_valorant_stats.csv")
 
+# ✅ Clean column names to remove hidden whitespace or newline characters
+df.columns = df.columns.str.strip()
 # Only keep required columns for similarity computation
 feature_cols = [
     'Rating',
