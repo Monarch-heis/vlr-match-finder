@@ -3,11 +3,9 @@ import streamlit as st
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 
-# --------------------------
-# Load and clean the data
-# --------------------------
+# Load the data
 df = pd.read_csv("cleaned_valorant_stats.csv")
-df.columns = df.columns.str.strip()  # Strip whitespace/newlines from column names
+df.columns = df.columns.str.strip().str.replace(r'\s+', ' ', regex=True)
 
 # Define feature columns
 feature_cols = [
@@ -21,9 +19,7 @@ feature_cols = [
     'Clutch Success %'
 ]
 
-# --------------------------
 # Streamlit UI
-# --------------------------
 st.title("🎯 Valorant Pro Match Finder")
 st.markdown("Enter your stats below and find the pro players most similar to you.")
 
@@ -39,9 +35,7 @@ with st.sidebar:
     clutch_percent = st.slider("Clutch Success %", 0, 100, 20)
     min_rounds = st.slider("Minimum Rounds Played", 0, 100, 30)
 
-# --------------------------
 # Preprocessing
-# --------------------------
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(df[feature_cols])
 
@@ -50,21 +44,15 @@ user_input = [[
 ]]
 user_scaled = scaler.transform(user_input)
 
-# --------------------------
-# Similarity Matching
-# --------------------------
+# Compute similarity
 df["Similarity"] = cosine_similarity(user_scaled, X_scaled)[0]
 
-# Filter by minimum rounds played
+# Filter and show results
 if "Rounds Played" in df.columns:
     filtered = df[df["Rounds Played"] >= min_rounds]
 else:
     filtered = df
 
 top_matches = filtered.sort_values(by="Similarity", ascending=False).head(3)
-
-# --------------------------
-# Display Results
-# --------------------------
 st.subheader("🎖️ Top 3 Pro Player Matches")
 st.table(top_matches[["Player", "Similarity", "Rounds Played"]].round(3))
