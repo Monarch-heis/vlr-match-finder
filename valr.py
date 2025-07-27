@@ -4,14 +4,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 
 # --------------------------
-# Load Cleaned Dataset
+# Load and clean the data
 # --------------------------
 df = pd.read_csv("cleaned_valorant_stats.csv")
-df = pd.read_csv("cleaned_valorant_stats.csv")
+df.columns = df.columns.str.strip()  # Strip whitespace/newlines from column names
 
-# ✅ Clean column names to remove hidden whitespace or newline characters
-df.columns = df.columns.str.strip()
-# Only keep required columns for similarity computation
+# Define feature columns
 feature_cols = [
     'Rating',
     'Average Combat Score',
@@ -24,7 +22,7 @@ feature_cols = [
 ]
 
 # --------------------------
-# UI
+# Streamlit UI
 # --------------------------
 st.title("🎯 Valorant Pro Match Finder")
 st.markdown("Enter your stats below and find the pro players most similar to you.")
@@ -53,11 +51,11 @@ user_input = [[
 user_scaled = scaler.transform(user_input)
 
 # --------------------------
-# Match & Display
+# Similarity Matching
 # --------------------------
 df["Similarity"] = cosine_similarity(user_scaled, X_scaled)[0]
 
-# Filter players with minimum rounds
+# Filter by minimum rounds played
 if "Rounds Played" in df.columns:
     filtered = df[df["Rounds Played"] >= min_rounds]
 else:
@@ -65,5 +63,8 @@ else:
 
 top_matches = filtered.sort_values(by="Similarity", ascending=False).head(3)
 
+# --------------------------
+# Display Results
+# --------------------------
 st.subheader("🎖️ Top 3 Pro Player Matches")
 st.table(top_matches[["Player", "Similarity", "Rounds Played"]].round(3))
