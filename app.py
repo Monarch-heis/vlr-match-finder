@@ -28,7 +28,7 @@ feature_cols = [
 # Drop rows with missing values in feature columns
 df.dropna(subset=feature_cols, inplace=True)
 
-st.write("DataFrame columns:", df.columns.tolist())
+
 # Streamlit UI
 st.title("🎯 Valorant Pro Match Finder")
 st.markdown("Enter your stats below and find the pro players most similar to you.")
