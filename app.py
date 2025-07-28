@@ -38,7 +38,7 @@ st.markdown("Enter your stats below and find the pro players most similar to you
 with st.sidebar:
     st.header("Your Player Stats")
     acs = st.slider("Average Combat Score", 100, 400, 200)
-    kd = st.slider('K/D',0,2,1)
+    kd = st.slider('K/D',0.0,2.0,1.0)
     kast = st.slider('KAST%',0,100,50)
     adr = st.slider('Damage/round',0,300,100)
     kpr = st.slider("Kills/Round", 0.3, 2.0, 0.7)
